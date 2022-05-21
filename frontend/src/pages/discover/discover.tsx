@@ -3,45 +3,17 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ClearIcon from '@mui/icons-material/Clear';
 import React, { useEffect, useState } from "react";
 import styles from './styles';
-import axios from "axios";
-
-interface IUser {
-  firstName: string;
-  id: string;
-  lastName: string;
-  picture: string;
-  title: string;
-}
-
-interface IUserInfo {
-  id: string;
-  dateOfBirth: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  phone: string;
-  registerDate: string;
-  title: string;
-}
+import { IUser, IUserInfo } from '../../models/user';
+import { getRandomUsers, getUserDetails } from '../../services/user.service';
 
 const Discover = () => {
   const [users, setUsers] = useState<Array<IUser>>([]);
   const [currentUser, setCurrentUser] = useState<IUserInfo>();
   const [page, setPage] = useState<number>(0);
-  const limit = 20;
-  const USER_API = 'https://dummyapi.io/data/v1/user';
-  const APP_ID = '628582515b894e140b9a5c04';
 
   useEffect(() => {
-    if (!users.length) {
-      getRandomUsers();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!users.length && page !== 0) getRandomUsers();
-  }, [page])
+    getRandomUsers(page).then(data => setUsers(data));
+  }, [page]);
 
   useEffect(() => {
     if (users.length && (!currentUser || (currentUser && currentUser.id !== users[0].id))) {
@@ -50,28 +22,10 @@ const Discover = () => {
       })
     }
 
-    if (users.length == 0) {
+    if (currentUser && users.length == 0) {
       setPage(page + 1);
     }
   }, [users]);
-
-  const getRandomUsers = async () => {
-    const data = await axios.get(`${USER_API}?limit=${limit}&&page=${page}`, {
-      headers: {
-        "app-id": APP_ID
-      }
-    });
-    setUsers(data.data.data);
-  }
-
-  const getUserDetails = async (userID: string) => {
-    const data = await axios.get(`${USER_API}/${userID}`, {
-      headers: {
-        "app-id": APP_ID
-      }
-    });
-    return data.data;
-  }
 
   const handlePass = () => {
     setUsers((prev: any) => prev.slice(1));
