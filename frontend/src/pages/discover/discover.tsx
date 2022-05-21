@@ -1,4 +1,4 @@
-import { Grid, Card, CardActionArea, CardMedia, CardContent, Typography, IconButton } from "@mui/material";
+import { Grid, Card, CardActionArea, CardMedia, CardContent, Typography, IconButton, LinearProgress } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ClearIcon from '@mui/icons-material/Clear';
 import React, { useEffect, useState } from "react";
@@ -13,10 +13,25 @@ interface IUser {
   title: string;
 }
 
+interface IUserInfo {
+  id: string;
+  dateOfBirth: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  phone: string;
+  registerDate: string;
+  title: string;
+}
+
 const Discover = () => {
   const [users, setUsers] = useState<Array<IUser>>([]);
+  const [currentUser, setCurrentUser] = useState<IUserInfo>();
   const [page, setPage] = useState<number>(0);
   const limit = 20;
+  const USER_API = 'https://dummyapi.io/data/v1/user';
+  const APP_ID = '628582515b894e140b9a5c04';
 
   useEffect(() => {
     if (!users.length) {
@@ -25,32 +40,45 @@ const Discover = () => {
   }, []);
 
   useEffect(() => {
-    getRandomUsers();
+    if (!users.length && page !== 0) getRandomUsers();
   }, [page])
 
+  useEffect(() => {
+    if (users.length && (!currentUser || (currentUser && currentUser.id !== users[0].id))) {
+      getUserDetails(users[0].id).then((data) => {
+        setCurrentUser(data)
+      })
+    }
+
+    if (users.length == 0) {
+      setPage(page + 1);
+    }
+  }, [users]);
+
   const getRandomUsers = async () => {
-    const data = await axios.get(`https://dummyapi.io/data/v1/user?limit=${limit}&&page=${page}`, {
+    const data = await axios.get(`${USER_API}?limit=${limit}&&page=${page}`, {
       headers: {
-        "app-id": "628582515b894e140b9a5c04"
+        "app-id": APP_ID
       }
     });
     setUsers(data.data.data);
   }
 
+  const getUserDetails = async (userID: string) => {
+    const data = await axios.get(`${USER_API}/${userID}`, {
+      headers: {
+        "app-id": APP_ID
+      }
+    });
+    return data.data;
+  }
+
   const handlePass = () => {
     setUsers((prev: any) => prev.slice(1));
-
-    if (users.length == 1) {
-      setPage(page + 1);
-    }
   }
 
   const handleLike = () => {
     setUsers((prev: any) => prev.slice(1));
-
-    if (users.length == 1) {
-      setPage(page + 1);
-    }
   }
 
   return (
@@ -58,7 +86,7 @@ const Discover = () => {
       {
         users.length ? (
           <React.Fragment>
-            <Card style={styles.card}>
+            <Card style={styles.card} className="card-info">
               <CardActionArea>
                 <CardMedia
                   sx={{ height: '100%' }}
@@ -68,10 +96,10 @@ const Discover = () => {
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    {users[0].firstName}
+                    {users[0].firstName} {users[0].lastName}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {users[0].title}
+                    {currentUser && (new Date().getFullYear() - new Date(currentUser.dateOfBirth).getFullYear())}
                   </Typography>
                 </CardContent>
               </CardActionArea>
@@ -91,9 +119,12 @@ const Discover = () => {
             </Grid>
           </React.Fragment>
         ) : (
-          <Typography variant="body1">
-            Looks like you don't have anyone to reach =))
-          </Typography>
+          <React.Fragment>
+            <LinearProgress />
+            <Typography textAlign={'center'} marginTop={2}>
+              Loading ...
+            </Typography>
+          </React.Fragment>
         )
       }
     </Grid>
