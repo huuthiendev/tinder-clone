@@ -13,8 +13,8 @@ export enum IReactionType {
 
 const ReactionSchema = new Schema({
   user_id: {
-    type: Schema.Types.String,
-    required: [true]
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
   reaction_user_id: {
     type: Schema.Types.String,

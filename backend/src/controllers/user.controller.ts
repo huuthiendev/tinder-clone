@@ -140,7 +140,7 @@ export class UserController implements AppRoute {
       if (!Types.ObjectId.isValid(req.params.user_id)) {
         return res.status(400).send(errors.USER_ID_INVALID);
       }
-      var likedList = await Reaction.find({ user_id: req.params.user_id, reaction_type: IReactionType.like });
+      var likedList = await Reaction.find({ user_id: req.params.user_id, reaction_type: IReactionType.like }).populate('user_id');
       return res.json(likedList);
     }
     catch (err) {
