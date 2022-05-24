@@ -43,7 +43,7 @@ const Discover = () => {
             <Card style={styles.card} className="card-info">
               <CardActionArea>
                 <CardMedia
-                  sx={{ height: '100%' }}
+                  sx={{ height: '400px' }}
                   component="img"
                   image={users[0].picture}
                   alt="avatar"
