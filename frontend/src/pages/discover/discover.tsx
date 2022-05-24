@@ -4,7 +4,12 @@ import ClearIcon from '@mui/icons-material/Clear';
 import React, { useEffect, useState } from "react";
 import styles from './styles';
 import { IUser, IUserInfo } from '../../models/user';
-import { getRandomUsers, getUserDetails } from '../../services/user.service';
+import { getRandomUsers, getUserDetails, postReaction } from '../../services/user.service';
+
+enum ReactionType {
+  like = 1,
+  pass = 2
+}
 
 const Discover = () => {
   const [users, setUsers] = useState<Array<IUser>>([]);
@@ -28,10 +33,12 @@ const Discover = () => {
   }, [users]);
 
   const handlePass = () => {
+    postReaction(users[0].id, users[0].id, ReactionType.pass);
     setUsers((prev: any) => prev.slice(1));
   }
 
   const handleLike = () => {
+    postReaction(users[0].id, users[0].id, ReactionType.like);
     setUsers((prev: any) => prev.slice(1));
   }
 
@@ -43,7 +50,7 @@ const Discover = () => {
             <Card style={styles.card} className="card-info">
               <CardActionArea>
                 <CardMedia
-                  sx={{ height: '400px' }}
+                  sx={{ height: '55vh' }}
                   component="img"
                   image={users[0].picture}
                   alt="avatar"
