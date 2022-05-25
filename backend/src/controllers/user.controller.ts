@@ -15,7 +15,7 @@ export class UserController implements AppRoute {
     this.router.get('/:user_id', this.getUserProfile);
 
     this.router.post('/action/reaction', checkRequireParams(['user_id', 'reaction_user_id', 'reaction_type']), this.reaction);
-    this.router.get('/action/matches/:user_id', this.generateUsers);
+    this.router.get('/action/matches/:user_id', this.getMatchesList);
     this.router.get('/action/liked/:user_id', this.getLikedList);
 
     this.router.get('/action/random', this.getRandomUser);
@@ -142,7 +142,7 @@ export class UserController implements AppRoute {
         }).populate('user_id');
 
         if (checkMatch) {
-          matchesList.push(checkMatch);
+          matchesList.push(checkMatch.user_id);
         }
       }
       return res.json(matchesList);
