@@ -13,7 +13,7 @@ enum ReactionType {
 
 const Discover = ({ loginInfo }: { loginInfo: any }) => {
   const [users, setUsers] = useState<Array<IUser>>([]);
-  const [currentUser, setCurrentUser] = useState<IUserInfo>();
+  const [currentUser, setCurrentUser] = useState<any>();
   const [page, setPage] = useState<number>(0);
 
   useEffect(() => {
@@ -33,12 +33,12 @@ const Discover = ({ loginInfo }: { loginInfo: any }) => {
   }, [users]);
 
   const handlePass = () => {
-    postReaction(loginInfo._id, users[0].id, ReactionType.pass);
+    postReaction(loginInfo._id, currentUser._id, ReactionType.pass);
     setUsers((prev: any) => prev.slice(1));
   }
 
   const handleLike = () => {
-    postReaction(loginInfo._id, users[0].id, ReactionType.like);
+    postReaction(loginInfo._id, currentUser._id, ReactionType.like);
     setUsers((prev: any) => prev.slice(1));
   }
 
