@@ -3,9 +3,9 @@ import constants from "../utils/constants";
 
 const userAPI = constants.API_ENDPOINT + constants.API_USER;
 
-export const getRandomUsers = async (page: number = 0, limit: number = 20): Promise<any> => {
+export const getUsers = async (userID: string, page: number = 0, limit: number = 20): Promise<any> => {
   try {
-    const data = await axios.get(`${userAPI}?limit=${limit}&&page=${page}`, {
+    const data = await axios.get(`${userAPI}?limit=${limit}&page=${page}&user_id=${userID}`, {
       headers: {
         'app-id': constants.APP_ID
       }
@@ -13,7 +13,7 @@ export const getRandomUsers = async (page: number = 0, limit: number = 20): Prom
     return data.data.data;
   }
   catch (err) {
-    console.log('[UserService] getRandomUsers: ', err);
+    console.log('[UserService] getUsers: ', err);
     return [];
   }
 }
@@ -40,7 +40,7 @@ export const postReaction = async (userID: string, reactionUserID: string, react
       reaction_user_id: reactionUserID,
       reaction_type: reactionType,
     };
-    const data = await axios.post(`${userAPI}/n/reaction`, payload, {
+    const data = await axios.post(`${userAPI}/action/reaction`, payload, {
       headers: {
         'app-id': constants.APP_ID
       }
@@ -49,6 +49,17 @@ export const postReaction = async (userID: string, reactionUserID: string, react
   }
   catch (err) {
     console.log('[UserService] postReaction: ', err);
+    return [];
+  }
+}
+
+export const getRandomUser = async (): Promise<any> => {
+  try {
+    const data = await axios.get(`${userAPI}/action/random`);
+    return data.data;
+  }
+  catch (err) {
+    console.log('[UserService] getRandomUser: ', err);
     return [];
   }
 }
