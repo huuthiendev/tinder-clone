@@ -8,6 +8,9 @@ import JoinInnerIcon from '@mui/icons-material/JoinInner';
 import { BrowserRouter, Link, Routes, Route } from 'react-router-dom';
 
 import DiscoverScreen from './pages/discover/discover';
+import LikedScreen from './pages/liked/liked';
+import MatchesScreen from './pages/matches/matches';
+
 import constants from './utils/constants';
 import { getRandomUser } from './services/user.service';
 
@@ -73,6 +76,8 @@ const App = () => {
                   <Grid height={'calc(100% - 72px)'} >
                     <Routes>
                       <Route path="/" element={<DiscoverScreen loginInfo={loginInfo} />} />
+                      <Route path="/liked" element={<LikedScreen loginInfo={loginInfo} />} />
+                      <Route path="/matches" element={<MatchesScreen loginInfo={loginInfo} />} />
                     </Routes>
                   </Grid>
                   <BottomBar />
