@@ -15,7 +15,7 @@ const Matches = ({ loginInfo }: { loginInfo: any }) => {
     <Grid container height={'100%'} width={'100%'} gap={4} justifyContent={'center'} overflow={'auto'}>
       {
         matchUsers.length ? matchUsers.map(user =>
-          <Grid item md={6} xs={5}>
+          <Grid item md={5} xs={5}>
             <Card style={styles.card} className="card-info">
               <CardActionArea>
                 <CardMedia
