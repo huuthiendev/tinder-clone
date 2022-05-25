@@ -63,3 +63,25 @@ export const getRandomUser = async (): Promise<any> => {
     return [];
   }
 }
+
+export const getLikedUsers = async (userID: string): Promise<any> => {
+  try {
+    const data = await axios.get(`${userAPI}/action/liked/${userID}`);
+    return data.data;
+  }
+  catch (err) {
+    console.log('[UserService] getLikedUsers: ', err);
+    return [];
+  }
+}
+
+export const getMatchUsers = async (userID: string): Promise<any> => {
+  try {
+    const data = await axios.get(`${userAPI}/action/matches/${userID}`);
+    return data.data;
+  }
+  catch (err) {
+    console.log('[UserService] getMatchUsers: ', err);
+    return [];
+  }
+}
