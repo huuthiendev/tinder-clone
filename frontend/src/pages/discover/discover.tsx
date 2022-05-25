@@ -3,7 +3,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ClearIcon from '@mui/icons-material/Clear';
 import React, { useEffect, useState } from "react";
 import styles from './styles';
-import { IUser, IUserInfo } from '../../models/user';
+import { IUser } from '../../models/user';
 import { getUsers, getUserDetails, postReaction } from '../../services/user.service';
 
 enum ReactionType {
