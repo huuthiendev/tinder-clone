@@ -18,6 +18,7 @@ export class UserController implements AppRoute {
     this.router.get('/action/matches/:user_id', this.generateUsers);
     this.router.get('/action/liked/:user_id', this.getLikedList);
 
+    this.router.get('/action/random', this.getRandomUser);
     this.router.get('/action/generate', this.generateUsers);
   }
 
@@ -57,6 +58,18 @@ export class UserController implements AppRoute {
     }
     catch (err) {
       console.log('[UserController] getUserProfile - ERROR: ', err);
+      return res.status(400).send(err);
+    }
+  }
+
+  public async getRandomUser(req: Request, res: Response): Promise<any> {
+    try {
+      var randomSkip = Math.ceil(Math.random() * (99) + 1)
+      var userProfile = await User.findOne({}).skip(randomSkip);
+      return res.json(userProfile);
+    }
+    catch (err) {
+      console.log('[UserController] getRandomUser - ERROR: ', err);
       return res.status(400).send(err);
     }
   }
@@ -122,7 +135,12 @@ export class UserController implements AppRoute {
 
       for (let index = 0; index < likedList.length; index++) {
         var reaction: IReaction = likedList[index];
-        var checkMatch = await Reaction.findOne({ user_id: reaction.reaction_user_id, reaction_user_id: reaction.user_id, reaction_type: IReactionType.like });
+        var checkMatch = await Reaction.findOne({
+          user_id: reaction.reaction_user_id,
+          reaction_user_id: reaction.user_id,
+          reaction_type: IReactionType.like
+        }).populate('user_id');
+
         if (checkMatch) {
           matchesList.push(checkMatch);
         }
