@@ -4,20 +4,20 @@ import ClearIcon from '@mui/icons-material/Clear';
 import React, { useEffect, useState } from "react";
 import styles from './styles';
 import { IUser, IUserInfo } from '../../models/user';
-import { getRandomUsers, getUserDetails, postReaction } from '../../services/user.service';
+import { getUsers, getUserDetails, postReaction } from '../../services/user.service';
 
 enum ReactionType {
   like = 1,
   pass = 2
 }
 
-const Discover = () => {
+const Discover = ({ loginInfo }: { loginInfo: any }) => {
   const [users, setUsers] = useState<Array<IUser>>([]);
   const [currentUser, setCurrentUser] = useState<IUserInfo>();
   const [page, setPage] = useState<number>(0);
 
   useEffect(() => {
-    getRandomUsers(page).then(data => setUsers(data));
+    getUsers(loginInfo._id, page).then(data => setUsers(data));
   }, [page]);
 
   useEffect(() => {
@@ -33,12 +33,12 @@ const Discover = () => {
   }, [users]);
 
   const handlePass = () => {
-    postReaction(users[0].id, users[0].id, ReactionType.pass);
+    postReaction(loginInfo._id, users[0].id, ReactionType.pass);
     setUsers((prev: any) => prev.slice(1));
   }
 
   const handleLike = () => {
-    postReaction(users[0].id, users[0].id, ReactionType.like);
+    postReaction(loginInfo._id, users[0].id, ReactionType.like);
     setUsers((prev: any) => prev.slice(1));
   }
 
