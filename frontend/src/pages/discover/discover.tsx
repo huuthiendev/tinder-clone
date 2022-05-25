@@ -3,16 +3,21 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ClearIcon from '@mui/icons-material/Clear';
 import React, { useEffect, useState } from "react";
 import styles from './styles';
-import { IUser, IUserInfo } from '../../models/user';
-import { getRandomUsers, getUserDetails } from '../../services/user.service';
+import { IUser } from '../../models/user';
+import { getUsers, getUserDetails, postReaction } from '../../services/user.service';
 
-const Discover = () => {
+enum ReactionType {
+  like = 1,
+  pass = 2
+}
+
+const Discover = ({ loginInfo }: { loginInfo: any }) => {
   const [users, setUsers] = useState<Array<IUser>>([]);
-  const [currentUser, setCurrentUser] = useState<IUserInfo>();
+  const [currentUser, setCurrentUser] = useState<any>();
   const [page, setPage] = useState<number>(0);
 
   useEffect(() => {
-    getRandomUsers(page).then(data => setUsers(data));
+    getUsers(loginInfo._id, page).then(data => setUsers(data));
   }, [page]);
 
   useEffect(() => {
@@ -28,10 +33,12 @@ const Discover = () => {
   }, [users]);
 
   const handlePass = () => {
+    postReaction(loginInfo._id, currentUser._id, ReactionType.pass);
     setUsers((prev: any) => prev.slice(1));
   }
 
   const handleLike = () => {
+    postReaction(loginInfo._id, currentUser._id, ReactionType.like);
     setUsers((prev: any) => prev.slice(1));
   }
 
@@ -43,7 +50,7 @@ const Discover = () => {
             <Card style={styles.card} className="card-info">
               <CardActionArea>
                 <CardMedia
-                  sx={{ height: '100%' }}
+                  sx={{ height: '55vh' }}
                   component="img"
                   image={users[0].picture}
                   alt="avatar"

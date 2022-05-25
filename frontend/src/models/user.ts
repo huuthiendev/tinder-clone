@@ -11,6 +11,7 @@ export interface IUserInfo {
   dateOfBirth: string;
   email: string;
   firstName: string;
+  picture: string;
   lastName: string;
   gender: string;
   phone: string;
