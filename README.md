@@ -1,4 +1,4 @@
-# Tinder Clone (Coder Push Challenge)
+# Tinder Clone
 
 ## Backend Setup
 Go to backend folder
